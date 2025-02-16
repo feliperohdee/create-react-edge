@@ -28,7 +28,7 @@ const updateProjectFiles = async projectName => {
 };
 
 const createProject = async () => {
-	console.log(chalk.bgGreen('\n🚀 Create React Edge\n'));
+	console.log(chalk.underline.whiteBright('\n🚀 Create React Edge\n'));
 
 	// Get project name
 	const response = await prompts({
