@@ -1,0 +1,29 @@
+{
+	"name": "create-react-edge",
+	"author": "Felipe Rohde <feliperohdee@gmail.com>",
+	"bin": "./index.js",
+	"dependencies": {
+		"chalk": "^5.3.0",
+		"ora": "^7.0.1",
+		"prompts": "^2.4.2"
+	},
+	"description": "Create React Edge projects",
+	"devDependencies": {
+		"prettier": "^3.5.1"
+	},
+	"keywords": [
+		"react",
+		"react-edge",
+		"create-react-edge"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/feliperohdee/react-edge.git"
+	},
+	"scripts": {
+		"npm-publish": "prettier --write . && yarn version --patch --no-git-tag-version && yarn publish --non-interactive"
+	},
+	"type": "module",
+	"version": "1.0.1"
+}
