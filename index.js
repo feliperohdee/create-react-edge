@@ -3,10 +3,29 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import chalk from 'chalk';
+import fs from 'fs/promises';
 import ora from 'ora';
 import prompts from 'prompts';
 
 const execAsync = promisify(exec);
+
+const updateProjectFiles = async projectName => {
+	// Update wrangler.toml
+	const wranglerPath = './wrangler.json';
+	const wranglerContent = await fs.readFile(wranglerPath, 'utf8');
+	const updatedWranglerContent = JSON.parse(wranglerContent);
+	updatedWranglerContent.name = projectName;
+
+	await fs.writeFile(wranglerPath, JSON.stringify(updatedWranglerContent, null, 2));
+
+	// Update package.json
+	const packagePath = './package.json';
+	const packageContent = await fs.readFile(packagePath, 'utf8');
+	const updatedPackageContent = JSON.parse(packageContent);
+	updatedPackageContent.name = projectName;
+
+	await fs.writeFile(packagePath, JSON.stringify(updatedPackageContent, null, 2));
+};
 
 const createProject = async () => {
 	console.log(chalk.blue('\n📦 Create React Edge\n'));
@@ -31,6 +50,10 @@ const createProject = async () => {
 
 		// Change to project directory
 		process.chdir(projectName);
+
+		// Update project files
+		spinner.text = 'Updating project files...';
+		await updateProjectFiles(projectName);
 
 		// Remove existing git history
 		spinner.text = 'Cleaning up...';

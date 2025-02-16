@@ -1,4 +1,4 @@
-# create-react-edge
+# 🚀 create-react-edge
 
 Create a new [React Edge](https://www.npmjs.com/package/react-edge) application with one command.
 
@@ -40,6 +40,28 @@ The project template comes with:
 
 - Node.js 18+
 - npm 7+
+
+## Cloudflare Configuration
+
+To use Cloudflare Workers, you'll need to provide your Cloudflare credentials. You can do this in two ways:
+
+1. Add it to your package.json scripts:
+
+```json
+{
+	"scripts": {
+		"edge": "CLOUDFLARE_API_TOKEN=[CF_API_TOKEN] edge"
+	}
+}
+```
+
+2. Set environment variables:
+
+```bash
+export CLOUDFLARE_API_TOKEN=[USER_CF_API_TOKEN]
+```
+
+Replace `[USER_CF_API_TOKEN]` with your actual Cloudflare Account ID and API Token.
 
 ## 📝 License
 
