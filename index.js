@@ -9,6 +9,17 @@ import prompts from 'prompts';
 
 const execAsync = promisify(exec);
 
+const getPackageManager = () => {
+	const userAgent = process.env.npm_config_user_agent;
+	if (userAgent) {
+		if (userAgent.startsWith('yarn')) {
+			return 'yarn';
+		}
+	}
+
+	return 'npm';
+};
+
 const updateProjectFiles = async projectName => {
 	// Update wrangler.toml
 	const wranglerPath = './wrangler.json';
@@ -28,7 +39,7 @@ const updateProjectFiles = async projectName => {
 };
 
 const createProject = async () => {
-	console.log(chalk.underline.whiteBright('\n🚀 Create React Edge\n'));
+	console.log(chalk.bold.white('\n🚀 Create React Edge\n'));
 
 	// Get project name
 	const response = await prompts({
@@ -63,16 +74,20 @@ const createProject = async () => {
 		spinner.text = 'Initializing new git repository...';
 		await execAsync('git init');
 
-		// Install dependencies
-		spinner.text = 'Installing dependencies...';
-		await execAsync('npm install');
-
 		spinner.succeed(chalk.green('✨ React Edge project created successfully!'));
+
+		const packageManager = getPackageManager();
 
 		// Show next steps
 		console.log('\n' + chalk.cyan('Next steps:'));
 		console.log(chalk.white(`1. cd ${projectName}`));
-		console.log(chalk.white('2. npm run dev\n'));
+		console.log(chalk.white(`2. ${packageManager} install`));
+
+		if (packageManager === 'yarn') {
+			console.log(chalk.white(`3. yarn dev\n`));
+		} else {
+			console.log(chalk.white(`3. npm run dev\n`));
+		}
 	} catch (error) {
 		spinner.fail(chalk.red('Error creating project:'));
 		console.error(chalk.red(error.message));
