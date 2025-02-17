@@ -11,6 +11,7 @@ const execAsync = promisify(exec);
 
 const getPackageManager = () => {
 	const userAgent = process.env.npm_config_user_agent;
+	
 	if (userAgent) {
 		if (userAgent.startsWith('yarn')) {
 			return 'yarn';
@@ -18,6 +19,25 @@ const getPackageManager = () => {
 	}
 
 	return 'npm';
+};
+
+const updateScripts = (packageJson, packageManager) => {
+	const edgeCommand = packageManager === 'yarn' ? 'yarn edge' : 'npx edge';
+
+	return {
+		...packageJson,
+		scripts: {
+			...packageJson.scripts,
+			build: `${edgeCommand} build`,
+			component: 'npx shadcn@latest add',
+			deploy: `${edgeCommand} deploy`,
+			dev: `rm -rf ./node_modules/.vite && ${edgeCommand} dev`,
+			lint: `${edgeCommand} lint`,
+			logs: `${edgeCommand} logs`,
+			test: `${edgeCommand} test`,
+			'type-check': `${edgeCommand} type-check`
+		}
+	};
 };
 
 const updateProjectFiles = async projectName => {
@@ -32,10 +52,14 @@ const updateProjectFiles = async projectName => {
 	// Update package.json
 	const packagePath = './package.json';
 	const packageContent = await fs.readFile(packagePath, 'utf8');
-	const updatedPackageContent = JSON.parse(packageContent);
-	updatedPackageContent.name = projectName;
+	const packageJson = JSON.parse(packageContent);
 
-	await fs.writeFile(packagePath, JSON.stringify(updatedPackageContent, null, 2));
+	// Get package manager and update scripts accordingly
+	const packageManager = getPackageManager();
+	const updatedPackageJson = updateScripts(packageJson, packageManager);
+	updatedPackageJson.name = projectName;
+
+	await fs.writeFile(packagePath, JSON.stringify(updatedPackageJson, null, 2));
 };
 
 const createProject = async () => {
@@ -82,12 +106,7 @@ const createProject = async () => {
 		console.log('\n' + chalk.cyan('Next steps:'));
 		console.log(chalk.white(`1. cd ${projectName}`));
 		console.log(chalk.white(`2. ${packageManager} install`));
-
-		if (packageManager === 'yarn') {
-			console.log(chalk.white(`3. yarn dev\n`));
-		} else {
-			console.log(chalk.white(`3. npm run dev\n`));
-		}
+		console.log(chalk.white(`3. ${packageManager === 'yarn' ? 'yarn dev' : 'npm run dev'}\n`));
 	} catch (error) {
 		spinner.fail(chalk.red('Error creating project:'));
 		console.error(chalk.red(error.message));
