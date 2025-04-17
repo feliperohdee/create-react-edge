@@ -11,7 +11,7 @@ const execAsync = promisify(exec);
 
 const getPackageManager = () => {
 	const userAgent = process.env.npm_config_user_agent;
-	
+
 	if (userAgent) {
 		if (userAgent.startsWith('yarn')) {
 			return 'yarn';
@@ -42,7 +42,7 @@ const updateScripts = (packageJson, packageManager) => {
 
 const updateProjectFiles = async projectName => {
 	// Update wrangler.toml
-	const wranglerPath = './wrangler.json';
+	const wranglerPath = './wrangler.jsonc';
 	const wranglerContent = await fs.readFile(wranglerPath, 'utf8');
 	const updatedWranglerContent = JSON.parse(wranglerContent);
 	updatedWranglerContent.name = projectName;

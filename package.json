@@ -25,5 +25,5 @@
 		"npm-publish": "prettier --write . && yarn version --patch --no-git-tag-version && yarn publish --non-interactive"
 	},
 	"type": "module",
-	"version": "1.0.8"
+	"version": "1.0.11"
 }
