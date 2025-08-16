@@ -22,7 +22,7 @@
 		"url": "https://github.com/feliperohdee/react-edge.git"
 	},
 	"scripts": {
-		"npm-publish": "prettier --write . && yarn version --patch --no-git-tag-version && yarn publish --non-interactive"
+		"npm:publish": "prettier --write . && yarn version --patch --no-git-tag-version && yarn publish --non-interactive"
 	},
 	"type": "module",
 	"version": "1.0.11"
